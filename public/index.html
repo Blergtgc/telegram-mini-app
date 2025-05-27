@@ -1,4 +1,4 @@
-]<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <style>
@@ -11,14 +11,11 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
-            flex-direction: column;
         }
-
         #loading {
             width: 500px;
             position: relative;
         }
-
         #glowBarContainer {
             width: 100%;
             height: 10px;
@@ -28,7 +25,6 @@
             box-shadow: 0 0 10px rgba(255,255,255,0.2);
             position: relative;
         }
-
         #glowBar {
             height: 100%;
             width: 0%;
@@ -40,29 +36,33 @@
                 0 0 40px white;
             transition: width 0.05s linear;
         }
-
         #percent {
             position: absolute;
-            bottom: 100%;
+            top: -20px; /* Перемещаем проценты выше прогресс-бара */
             left: 50%;
-            transform: translateX(-50%) translateY(-10px);
-            font-size: 16px;
+            transform: translateX(-50%); /* Убираем смещение по Y */
+            font-size: 14px;
             color: white;
             text-shadow: 0 0 5px white;
             pointer-events: none;
         }
-
-        #hello {
-            opacity: 0;
-            font-size: 32px;
-            margin-top: 30px;
+        #greeting {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
             color: white;
-            text-shadow: 0 0 5px white, 0 0 15px white;
-            transition: opacity 1s ease-in-out;
+            text-shadow:
+                0 0 10px white,
+                0 0 20px white,
+                0 0 30px white;
+            opacity: 0; /* Изначально скрыто */
+            transition: opacity 0.5s ease; /* Плавное появление */
         }
-
-        #hello.show {
-            opacity: 1;
+        #blackScreen {
+            display: none;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -73,13 +73,16 @@
             <div id="percent">1%</div>
         </div>
     </div>
-    <div id="hello">Привет</div>
-
+    <div id="greeting">Привет</div>
+    <div id="blackScreen">
+        <p>Черный экран</p>
+    </div>
     <script>
         const percent = document.getElementById('percent');
         const glowBar = document.getElementById('glowBar');
         const loadingDiv = document.getElementById('loading');
-        const helloText = document.getElementById('hello');
+        const greeting = document.getElementById('greeting');
+        const blackScreen = document.getElementById('blackScreen');
 
         const duration = Math.random() * (7000 - 3000) + 3000;
         let start = null;
@@ -95,9 +98,13 @@
                 requestAnimationFrame(updateProgress);
             } else {
                 loadingDiv.style.display = 'none';
+                greeting.style.opacity = '1'; // Плавное появление "Привет"
                 setTimeout(() => {
-                    helloText.classList.add('show');
-                }, 300); // небольшая задержка перед показом
+                    greeting.style.opacity = '0'; // Плавное исчезновение
+                    setTimeout(() => {
+                        blackScreen.style.display = 'block';
+                    }, 500); // Ждем завершения исчезновения
+                }, 1500); // Надпись видна 1.5 секунды
             }
         }
 
