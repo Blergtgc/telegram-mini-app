@@ -38,9 +38,9 @@
         }
         #percent {
             position: absolute;
-            top: -20px; /* Перемещаем проценты выше прогресс-бара */
+            top: -20px; /* Проценты выше прогресс-бара */
             left: 50%;
-            transform: translateX(-50%); /* Убираем смещение по Y */
+            transform: translateX(-50%);
             font-size: 14px;
             color: white;
             text-shadow: 0 0 5px white;
@@ -57,12 +57,40 @@
                 0 0 10px white,
                 0 0 20px white,
                 0 0 30px white;
-            opacity: 0; /* Изначально скрыто */
-            transition: opacity 0.5s ease; /* Плавное появление */
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        #nextMessage {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            color: white;
+            text-shadow:
+                0 0 5px white,
+                0 0 10px white;
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
         #blackScreen {
             display: none;
             margin-top: 20px;
+            text-align: center;
+        }
+        #blackScreen p {
+            margin: 0;
+        }
+        #credits {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: white;
+            text-shadow:
+                0 0 5px white,
+                0 0 10px white;
         }
     </style>
 </head>
@@ -74,14 +102,17 @@
         </div>
     </div>
     <div id="greeting">Привет</div>
+    <div id="nextMessage">Сейчас у тебя откроется программа</div>
     <div id="blackScreen">
         <p>Черный экран</p>
+        <div id="credits">by: @cmfucker, @emoorave</div>
     </div>
     <script>
         const percent = document.getElementById('percent');
         const glowBar = document.getElementById('glowBar');
         const loadingDiv = document.getElementById('loading');
         const greeting = document.getElementById('greeting');
+        const nextMessage = document.getElementById('nextMessage');
         const blackScreen = document.getElementById('blackScreen');
 
         const duration = Math.random() * (7000 - 3000) + 3000;
@@ -98,13 +129,19 @@
                 requestAnimationFrame(updateProgress);
             } else {
                 loadingDiv.style.display = 'none';
-                greeting.style.opacity = '1'; // Плавное появление "Привет"
+                greeting.style.opacity = '1'; // Показываем "Привет"
                 setTimeout(() => {
-                    greeting.style.opacity = '0'; // Плавное исчезновение
+                    greeting.style.opacity = '0'; // Убираем "Привет"
                     setTimeout(() => {
-                        blackScreen.style.display = 'block';
-                    }, 500); // Ждем завершения исчезновения
-                }, 1500); // Надпись видна 1.5 секунды
+                        nextMessage.style.opacity = '1'; // Показываем "Сейчас у тебя откроется программа"
+                        setTimeout(() => {
+                            nextMessage.style.opacity = '0'; // Убираем сообщение
+                            setTimeout(() => {
+                                blackScreen.style.display = 'block'; // Показываем черный экран
+                            }, 1500); // Задержка 1.5 секунды
+                        }, 3000); // Сообщение видно 3 секунды
+                    }, 500); // Задержка для исчезновения "Привет"
+                }, 1500); // "Привет" видно 1.5 секунды
             }
         }
 
