@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { 
+            background-color: black; 
+            color: white; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            font-family: Arial, sans-serif; 
+        }
+        #progressBar { 
+            width: 300px; 
+            height: 20px; 
+            background-color: gray; 
+            border-radius: 10px; 
+            overflow: hidden; 
+        }
+        #progress { 
+            width: 0%; 
+            height: 100%; 
+            background-color: green; 
+            transition: width ease-in-out; 
+        }
+        #percent { 
+            position: absolute; 
+            width: 300px; 
+            text-align: center; 
+            margin-top: -30px; 
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div id="percent">1%</div>
+        <div id="progressBar">
+            <div id="progress"></div>
+        </div>
+    </div>
+    <div id="blackScreen" style="display:none;">
+        <p>Черный экран</p>
+    </div>
+    <script>
+        const progress = document.getElementById('progress');
+        const percent = document.getElementById('percent');
+        const loadingDiv = document.getElementById('loading');
+        const blackScreen = document.getElementById('blackScreen');
+
+        const duration = Math.random() * (7000 - 3000) + 3000; // Случайно от 3 до 7 секунд
+        let start = null;
+
+        function updateProgress(timestamp) {
+            if (!start) start = timestamp;
+            const elapsed = timestamp - start;
+            const progressPercent = Math.min((elapsed / duration) * 100, 100);
+            progress.style.width = progressPercent + '%';
+            percent.textContent = Math.round(progressPercent) + '%';
+
+            if (progressPercent < 100) {
+                requestAnimationFrame(updateProgress);
+            } else {
+                loadingDiv.style.display = 'none';
+                blackScreen.style.display = 'block';
+            }
+        }
+        requestAnimationFrame(updateProgress);
+    </script>
+</body>
+</html>
