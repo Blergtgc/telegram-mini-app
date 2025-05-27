@@ -17,31 +17,44 @@
             font-size: 18px;
             margin-bottom: 10px;
         }
-        #textBar {
-            font-size: 14px;
-            color: white;
-            text-shadow: 0 0 5px white, 0 0 10px white;
-            white-space: pre;
-            font-family: monospace;
+        #glowBarContainer {
+            width: 500px;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+        #glowBar {
+            height: 100%;
+            width: 0%;
+            background: white;
+            box-shadow:
+                0 0 10px white,
+                0 0 20px white,
+                0 0 30px white,
+                0 0 40px white;
+            transition: width 0.05s linear;
         }
     </style>
 </head>
 <body>
     <div id="loading">
         <div id="percent">1%</div>
-        <div id="textBar">---------------</div>
+        <div id="glowBarContainer">
+            <div id="glowBar"></div>
+        </div>
     </div>
-    <div id="blackScreen" style="display:none;">
+    <div id="blackScreen" style="display:none; margin-top: 20px;">
         <p>Черный экран</p>
     </div>
     <script>
         const percent = document.getElementById('percent');
-        const textBar = document.getElementById('textBar');
+        const glowBar = document.getElementById('glowBar');
         const loadingDiv = document.getElementById('loading');
         const blackScreen = document.getElementById('blackScreen');
 
         const duration = Math.random() * (7000 - 3000) + 3000;
-        const totalDashes = 15;
         let start = null;
 
         function updateProgress(timestamp) {
@@ -49,10 +62,7 @@
             const elapsed = timestamp - start;
             const progressPercent = Math.min((elapsed / duration) * 100, 100);
             percent.textContent = Math.round(progressPercent) + '%';
-
-            const filledDashes = Math.round((progressPercent / 100) * totalDashes);
-            const bar = '-'.repeat(filledDashes).padEnd(totalDashes, ' ');
-            textBar.textContent = bar;
+            glowBar.style.width = progressPercent + '%';
 
             if (progressPercent < 100) {
                 requestAnimationFrame(updateProgress);
