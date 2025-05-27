@@ -2,62 +2,57 @@
 <html>
 <head>
     <style>
-        body { 
-            background-color: black; 
-            color: white; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-            font-family: Arial, sans-serif; 
+        body {
+            background-color: black;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
         }
-        #progressBar { 
-            width: 300px; 
-            height: 20px; 
-            background-color: gray; 
-            border-radius: 10px; 
-            overflow: hidden; 
+        #percent {
+            font-size: 18px;
+            margin-bottom: 10px;
         }
-        #progress { 
-            width: 0%; 
-            height: 100%; 
-            background-color: green; 
-            transition: width ease-in-out; 
-        }
-        #percent { 
-            position: absolute; 
-            width: 300px; 
-            text-align: center; 
-            margin-top: -30px; 
+        #textBar {
+            font-size: 14px;
+            color: white;
+            text-shadow: 0 0 5px white, 0 0 10px white;
+            white-space: pre;
+            font-family: monospace;
         }
     </style>
 </head>
 <body>
     <div id="loading">
         <div id="percent">1%</div>
-        <div id="progressBar">
-            <div id="progress"></div>
-        </div>
+        <div id="textBar">---------------</div>
     </div>
     <div id="blackScreen" style="display:none;">
         <p>Черный экран</p>
     </div>
     <script>
-        const progress = document.getElementById('progress');
         const percent = document.getElementById('percent');
+        const textBar = document.getElementById('textBar');
         const loadingDiv = document.getElementById('loading');
         const blackScreen = document.getElementById('blackScreen');
 
-        const duration = Math.random() * (7000 - 3000) + 3000; // Случайно от 3 до 7 секунд
+        const duration = Math.random() * (7000 - 3000) + 3000;
+        const totalDashes = 15;
         let start = null;
 
         function updateProgress(timestamp) {
             if (!start) start = timestamp;
             const elapsed = timestamp - start;
             const progressPercent = Math.min((elapsed / duration) * 100, 100);
-            progress.style.width = progressPercent + '%';
             percent.textContent = Math.round(progressPercent) + '%';
+
+            const filledDashes = Math.round((progressPercent / 100) * totalDashes);
+            const bar = '-'.repeat(filledDashes).padEnd(totalDashes, ' ');
+            textBar.textContent = bar;
 
             if (progressPercent < 100) {
                 requestAnimationFrame(updateProgress);
@@ -66,6 +61,7 @@
                 blackScreen.style.display = 'block';
             }
         }
+
         requestAnimationFrame(updateProgress);
     </script>
 </body>
