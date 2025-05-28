@@ -11,6 +11,7 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
+            overflow: hidden;
         }
         #loading {
             width: 500px;
@@ -46,21 +47,7 @@
             text-shadow: 0 0 5px white;
             pointer-events: none;
         }
-        #greeting {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 32px;
-            color: white;
-            text-shadow:
-                0 0 10px white,
-                0 0 20px white,
-                0 0 30px white;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        #nextMessage {
+        .fadeText {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -70,28 +57,25 @@
             text-align: center;
             text-shadow:
                 0 0 10px white,
-                0 0 20px white;
+                0 0 20px white,
+                0 0 30px white;
             opacity: 0;
             transition: opacity 0.5s ease;
         }
-        #blackScreen {
-            display: none;
-            margin-top: 20px;
-            text-align: center;
-        }
-        #blackScreen p {
-            margin: 0;
+        #greeting {
+            font-size: 32px;
         }
         #credits {
             position: absolute;
             bottom: 20px;
-            width: 100%;
-            text-align: center;
-            font-size: 12px;
+            left: 50px; /* немного правее от левого края */
+            font-size: 14px;
             color: white;
             text-shadow:
                 0 0 5px white,
                 0 0 10px white;
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
     </style>
 </head>
@@ -102,19 +86,17 @@
             <div id="percent">1%</div>
         </div>
     </div>
-    <div id="greeting">Привет</div>
-    <div id="nextMessage">Сейчас у тебя<br>откроется программа</div>
-    <div id="blackScreen">
-        <p>Черный экран</p>
-        <div id="credits">by: @cmfucker, @emoorave</div>
-    </div>
+    <div id="greeting" class="fadeText">Привет</div>
+    <div id="nextMessage" class="fadeText">Сейчас у тебя<br>откроется программа</div>
+    <div id="credits">by: @cmfucker, @emoorave</div>
+
     <script>
         const percent = document.getElementById('percent');
         const glowBar = document.getElementById('glowBar');
         const loadingDiv = document.getElementById('loading');
         const greeting = document.getElementById('greeting');
         const nextMessage = document.getElementById('nextMessage');
-        const blackScreen = document.getElementById('blackScreen');
+        const credits = document.getElementById('credits');
 
         const duration = Math.random() * (7000 - 3000) + 3000;
         let start = null;
@@ -138,9 +120,9 @@
                         setTimeout(() => {
                             nextMessage.style.opacity = '0';
                             setTimeout(() => {
-                                blackScreen.style.display = 'block';
+                                credits.style.opacity = '1';
                             }, 1500);
-                        }, 3000);
+                        }, 1500);
                     }, 500);
                 }, 1500);
             }
