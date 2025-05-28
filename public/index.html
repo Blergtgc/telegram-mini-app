@@ -19,7 +19,6 @@
             animation: waveLoop 6s ease-in-out infinite;
         }
 
-        /* Лёгкая текстура поверх */
         #texture {
             position: absolute;
             top: 0;
@@ -33,7 +32,7 @@
             display: none;
         }
 
-        #loading, #greeting, #nextMessage, #waitMessage, #enterButton, #credits {
+        #loading, #greeting, #nextMessage, #waitMessage, #enterButton, #credits, #authButtons {
             position: absolute;
             width: 100%;
             text-align: center;
@@ -83,6 +82,10 @@
             text-shadow: 0 0 10px white, 0 0 20px white;
             opacity: 0;
             transition: opacity 0.5s ease;
+            top: 50%;
+            transform: translateY(-50%);
+            position: absolute;
+            width: 100%;
         }
 
         #credits {
@@ -117,6 +120,30 @@
             transform: scale(1.05);
         }
 
+        #authButtons {
+            top: 60%;
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .auth-btn {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+            font-size: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            text-shadow: 0 0 10px white;
+            box-shadow: 0 0 20px white;
+            transition: background 0.3s, transform 0.3s, opacity 1s ease;
+            opacity: 0;
+        }
+
+        .auth-btn.show {
+            opacity: 1;
+        }
+
         @keyframes waveLoop {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -142,6 +169,11 @@
         <button onclick="startTransition()">Войти</button>
     </div>
 
+    <div id="authButtons">
+        <button class="auth-btn" id="registerBtn">Регистрация</button>
+        <button class="auth-btn" id="loginBtn">Авторизация</button>
+    </div>
+
     <div id="credits">by: @cmfucker</div>
 
     <script>
@@ -154,6 +186,9 @@
         const enterButton = document.getElementById('enterButton');
         const credits = document.getElementById('credits');
         const texture = document.getElementById('texture');
+        const authButtons = document.getElementById('authButtons');
+        const registerBtn = document.getElementById('registerBtn');
+        const loginBtn = document.getElementById('loginBtn');
 
         const duration = Math.random() * (7000 - 3000) + 3000;
         let start = null;
@@ -196,6 +231,15 @@
             credits.style.display = 'none';
             document.body.classList.add('transition');
             texture.style.display = 'block';
+
+            // Плавное появление кнопок
+            setTimeout(() => {
+                authButtons.style.display = 'flex';
+                setTimeout(() => {
+                    registerBtn.classList.add('show');
+                    loginBtn.classList.add('show');
+                }, 100);
+            }, 1000);
         }
 
         requestAnimationFrame(updateProgress);
