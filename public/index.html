@@ -38,7 +38,7 @@
         }
         #percent {
             position: absolute;
-            top: -20px; /* Проценты выше прогресс-бара */
+            top: -20px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 14px;
@@ -48,10 +48,10 @@
         }
         #greeting {
             position: absolute;
-            top: 50%;
+            top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 24px;
+            font-size: 32px;
             color: white;
             text-shadow:
                 0 0 10px white,
@@ -62,14 +62,15 @@
         }
         #nextMessage {
             position: absolute;
-            top: 60%;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            font-size: 18px;
+            transform: translate(-50%, -50%);
+            font-size: 28px;
             color: white;
+            text-align: center;
             text-shadow:
-                0 0 5px white,
-                0 0 10px white;
+                0 0 10px white,
+                0 0 20px white;
             opacity: 0;
             transition: opacity 0.5s ease;
         }
@@ -102,7 +103,7 @@
         </div>
     </div>
     <div id="greeting">Привет</div>
-    <div id="nextMessage">Сейчас у тебя откроется программа</div>
+    <div id="nextMessage">Сейчас у тебя<br>откроется программа</div>
     <div id="blackScreen">
         <p>Черный экран</p>
         <div id="credits">by: @cmfucker, @emoorave</div>
@@ -129,19 +130,19 @@
                 requestAnimationFrame(updateProgress);
             } else {
                 loadingDiv.style.display = 'none';
-                greeting.style.opacity = '1'; // Показываем "Привет"
+                greeting.style.opacity = '1';
                 setTimeout(() => {
-                    greeting.style.opacity = '0'; // Убираем "Привет"
+                    greeting.style.opacity = '0';
                     setTimeout(() => {
-                        nextMessage.style.opacity = '1'; // Показываем "Сейчас у тебя откроется программа"
+                        nextMessage.style.opacity = '1';
                         setTimeout(() => {
-                            nextMessage.style.opacity = '0'; // Убираем сообщение
+                            nextMessage.style.opacity = '0';
                             setTimeout(() => {
-                                blackScreen.style.display = 'block'; // Показываем черный экран
-                            }, 1500); // Задержка 1.5 секунды
-                        }, 3000); // Сообщение видно 3 секунды
-                    }, 500); // Задержка для исчезновения "Привет"
-                }, 1500); // "Привет" видно 1.5 секунды
+                                blackScreen.style.display = 'block';
+                            }, 1500);
+                        }, 3000);
+                    }, 500);
+                }, 1500);
             }
         }
 
