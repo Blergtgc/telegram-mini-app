@@ -1,22 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
     <style>
-        body {
-            background-color: black;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        html, body {
             margin: 0;
+            padding: 0;
+            height: 100%;
             font-family: Arial, sans-serif;
+            background-color: black;
             overflow: hidden;
         }
+
+        body.transition {
+            animation: bgWave 10s ease forwards;
+        }
+
+        @keyframes bgWave {
+            0% {
+                background: black;
+            }
+            30% {
+                background: #0a0a2a;
+            }
+            60% {
+                background: #000066;
+            }
+            100% {
+                background: radial-gradient(circle at 50% 50%, #001f4d, #000033);
+                background-size: 200% 200%;
+                animation: waveLoop 6s ease-in-out infinite;
+            }
+        }
+
+        @keyframes waveLoop {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .fadeText {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 28px;
+            color: white;
+            text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            text-align: center;
+        }
+
+        #greeting { font-size: 32px; }
+        #nextMessage { font-size: 22px; }
+        #waitMessage { font-size: 20px; }
+
+        #credits {
+            position: absolute;
+            bottom: 20px;
+            left: 70px;
+            font-size: 14px;
+            color: white;
+            text-shadow: 0 0 5px white, 0 0 10px white;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #startButton {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 30px;
+            font-size: 20px;
+            color: white;
+            background: transparent;
+            border: 2px solid white;
+            border-radius: 10px;
+            text-shadow: 0 0 10px white;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #startButton:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
         #loading {
             width: 500px;
             position: relative;
         }
+
         #glowBarContainer {
             width: 100%;
             height: 10px;
@@ -24,19 +106,16 @@
             border-radius: 5px;
             overflow: hidden;
             box-shadow: 0 0 10px rgba(255,255,255,0.2);
-            position: relative;
         }
+
         #glowBar {
             height: 100%;
             width: 0%;
             background: white;
-            box-shadow:
-                0 0 10px white,
-                0 0 20px white,
-                0 0 30px white,
-                0 0 40px white;
+            box-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white, 0 0 40px white;
             transition: width 0.05s linear;
         }
+
         #percent {
             position: absolute;
             top: -20px;
@@ -45,40 +124,6 @@
             font-size: 14px;
             color: white;
             text-shadow: 0 0 5px white;
-            pointer-events: none;
-        }
-        .fadeText {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 28px;
-            color: white;
-            text-align: center;
-            text-shadow:
-                0 0 10px white,
-                0 0 20px white,
-                0 0 30px white;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        #greeting {
-            font-size: 32px;
-        }
-        #waitMessage {
-            font-size: 22px;
-        }
-        #credits {
-            position: absolute;
-            bottom: 20px;
-            left: 70px; /* немного правее от края */
-            font-size: 14px;
-            color: white;
-            text-shadow:
-                0 0 5px white,
-                0 0 10px white;
-            opacity: 0;
-            transition: opacity 0.5s ease;
         }
     </style>
 </head>
@@ -92,7 +137,8 @@
     <div id="greeting" class="fadeText">Привет</div>
     <div id="nextMessage" class="fadeText">Сейчас у тебя<br>откроется программа</div>
     <div id="waitMessage" class="fadeText">Ожидайте...</div>
-    <div id="credits">ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤby: @cmfucker</div>
+    <button id="startButton">Начать</button>
+    <div id="credits">by: @cmfucker, @emoorave</div>
 
     <script>
         const percent = document.getElementById('percent');
@@ -102,6 +148,7 @@
         const nextMessage = document.getElementById('nextMessage');
         const waitMessage = document.getElementById('waitMessage');
         const credits = document.getElementById('credits');
+        const startButton = document.getElementById('startButton');
 
         const duration = Math.random() * (7000 - 3000) + 3000;
         let start = null;
@@ -130,6 +177,7 @@
                                     waitMessage.style.opacity = '0';
                                     setTimeout(() => {
                                         credits.style.opacity = '1';
+                                        startButton.style.opacity = '1';
                                     }, 500);
                                 }, 1500);
                             }, 500);
@@ -140,6 +188,12 @@
         }
 
         requestAnimationFrame(updateProgress);
+
+        startButton.addEventListener('click', () => {
+            startButton.style.display = 'none';
+            credits.style.display = 'none';
+            document.body.classList.add('transition');
+        });
     </script>
 </body>
 </html>
