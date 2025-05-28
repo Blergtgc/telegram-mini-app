@@ -65,10 +65,13 @@
         #greeting {
             font-size: 32px;
         }
+        #waitMessage {
+            font-size: 22px;
+        }
         #credits {
             position: absolute;
             bottom: 20px;
-            left: 50px; /* немного правее от левого края */
+            left: 70px; /* немного правее от края */
             font-size: 14px;
             color: white;
             text-shadow:
@@ -88,6 +91,7 @@
     </div>
     <div id="greeting" class="fadeText">Привет</div>
     <div id="nextMessage" class="fadeText">Сейчас у тебя<br>откроется программа</div>
+    <div id="waitMessage" class="fadeText">Ожидайте...</div>
     <div id="credits">by: @cmfucker, @emoorave</div>
 
     <script>
@@ -96,6 +100,7 @@
         const loadingDiv = document.getElementById('loading');
         const greeting = document.getElementById('greeting');
         const nextMessage = document.getElementById('nextMessage');
+        const waitMessage = document.getElementById('waitMessage');
         const credits = document.getElementById('credits');
 
         const duration = Math.random() * (7000 - 3000) + 3000;
@@ -120,8 +125,14 @@
                         setTimeout(() => {
                             nextMessage.style.opacity = '0';
                             setTimeout(() => {
-                                credits.style.opacity = '1';
-                            }, 1500);
+                                waitMessage.style.opacity = '1';
+                                setTimeout(() => {
+                                    waitMessage.style.opacity = '0';
+                                    setTimeout(() => {
+                                        credits.style.opacity = '1';
+                                    }, 500);
+                                }, 1500);
+                            }, 500);
                         }, 1500);
                     }, 500);
                 }, 1500);
