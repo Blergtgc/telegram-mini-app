@@ -2,117 +2,68 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <title>Loader</title>
     <style>
         html, body {
             margin: 0;
             padding: 0;
             height: 100%;
-            font-family: Arial, sans-serif;
             background-color: black;
+            font-family: Arial, sans-serif;
             overflow: hidden;
         }
 
         body.transition {
-            animation: bgWave 10s ease forwards;
+            background: radial-gradient(circle at 50% 50%, #001f4d, #000033);
+            background-size: 200% 200%;
+            animation: waveLoop 6s ease-in-out infinite;
         }
 
-        @keyframes bgWave {
-            0% {
-                background: black;
-            }
-            30% {
-                background: #0a0a2a;
-            }
-            60% {
-                background: #000066;
-            }
-            100% {
-                background: radial-gradient(circle at 50% 50%, #001f4d, #000033);
-                background-size: 200% 200%;
-                animation: waveLoop 6s ease-in-out infinite;
-            }
-        }
-
-        @keyframes waveLoop {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        .fadeText {
+        /* Лёгкая текстура поверх */
+        #texture {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 28px;
-            color: white;
-            text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+            opacity: 0.04;
+            z-index: 1;
+            display: none;
+        }
+
+        #loading, #greeting, #nextMessage, #waitMessage, #enterButton, #credits {
+            position: absolute;
+            width: 100%;
             text-align: center;
-        }
-
-        #greeting { font-size: 32px; }
-        #nextMessage { font-size: 22px; }
-        #waitMessage { font-size: 20px; }
-
-        #credits {
-            position: absolute;
-            bottom: 20px;
-            left: 70px;
-            font-size: 14px;
-            color: white;
-            text-shadow: 0 0 5px white, 0 0 10px white;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        #startButton {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 15px 30px;
-            font-size: 20px;
-            color: white;
-            background: transparent;
-            border: 2px solid white;
-            border-radius: 10px;
-            text-shadow: 0 0 10px white;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        #startButton:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            z-index: 2;
         }
 
         #loading {
-            width: 500px;
-            position: relative;
+            top: 40%;
         }
 
         #glowBarContainer {
-            width: 100%;
+            width: 500px;
             height: 10px;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 5px;
             overflow: hidden;
+            margin: 0 auto;
             box-shadow: 0 0 10px rgba(255,255,255,0.2);
+            position: relative;
         }
 
         #glowBar {
             height: 100%;
             width: 0%;
             background: white;
-            box-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white, 0 0 40px white;
+            box-shadow:
+                0 0 10px white,
+                0 0 20px white,
+                0 0 30px white,
+                0 0 40px white;
             transition: width 0.05s linear;
         }
 
@@ -125,20 +76,73 @@
             color: white;
             text-shadow: 0 0 5px white;
         }
+
+        .fadeText {
+            font-size: 28px;
+            color: white;
+            text-shadow: 0 0 10px white, 0 0 20px white;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #credits {
+            bottom: 20px;
+            left: 20px;
+            text-align: left;
+            font-size: 12px;
+            color: white;
+            text-shadow: 0 0 5px white, 0 0 10px white;
+        }
+
+        #enterButton {
+            top: 50%;
+            transform: translateY(-50%);
+            display: none;
+        }
+
+        #enterButton button {
+            font-size: 20px;
+            padding: 10px 20px;
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+            cursor: pointer;
+            text-shadow: 0 0 10px white;
+            box-shadow: 0 0 20px white;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        #enterButton button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        @keyframes waveLoop {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
     </style>
 </head>
 <body>
+    <div id="texture"></div>
+
     <div id="loading">
         <div id="glowBarContainer">
             <div id="glowBar"></div>
             <div id="percent">1%</div>
         </div>
     </div>
+
     <div id="greeting" class="fadeText">Привет</div>
-    <div id="nextMessage" class="fadeText">Сейчас у тебя<br>откроется программа</div>
+    <div id="nextMessage" class="fadeText">Сейчас у тебя откроется программа</div>
     <div id="waitMessage" class="fadeText">Ожидайте...</div>
-    <button id="startButton">Начать</button>
-    <div id="credits">by: @cmfucker, @emoorave</div>
+
+    <div id="enterButton">
+        <button onclick="startTransition()">Войти</button>
+    </div>
+
+    <div id="credits">by: @cmfucker</div>
 
     <script>
         const percent = document.getElementById('percent');
@@ -147,8 +151,9 @@
         const greeting = document.getElementById('greeting');
         const nextMessage = document.getElementById('nextMessage');
         const waitMessage = document.getElementById('waitMessage');
+        const enterButton = document.getElementById('enterButton');
         const credits = document.getElementById('credits');
-        const startButton = document.getElementById('startButton');
+        const texture = document.getElementById('texture');
 
         const duration = Math.random() * (7000 - 3000) + 3000;
         let start = null;
@@ -176,24 +181,24 @@
                                 setTimeout(() => {
                                     waitMessage.style.opacity = '0';
                                     setTimeout(() => {
-                                        credits.style.opacity = '1';
-                                        startButton.style.opacity = '1';
+                                        enterButton.style.display = 'block';
                                     }, 500);
                                 }, 1500);
                             }, 500);
-                        }, 1500);
+                        }, 3000);
                     }, 500);
                 }, 1500);
             }
         }
 
-        requestAnimationFrame(updateProgress);
-
-        startButton.addEventListener('click', () => {
-            startButton.style.display = 'none';
+        function startTransition() {
+            enterButton.style.display = 'none';
             credits.style.display = 'none';
             document.body.classList.add('transition');
-        });
+            texture.style.display = 'block';
+        }
+
+        requestAnimationFrame(updateProgress);
     </script>
 </body>
 </html>
