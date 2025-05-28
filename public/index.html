@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -8,29 +8,12 @@
             padding: 0;
             height: 100%;
             font-family: Arial, sans-serif;
-            background-color: black;
+            background: radial-gradient(circle at 50% 50%, #001f4d, #000033); /* Начальный градиент */
             overflow: hidden;
         }
 
-        body.transition {
-            animation: bgWave 10s ease forwards;
-        }
-
-        @keyframes bgWave {
-            0% {
-                background: black;
-            }
-            30% {
-                background: #0a0a2a;
-            }
-            60% {
-                background: #000066;
-            }
-            100% {
-                background: radial-gradient(circle at 50% 50%, #001f4d, #000033);
-                background-size: 200% 200%;
-                animation: waveLoop 6s ease-in-out infinite;
-            }
+        body {
+            animation: waveLoop 6s ease-in-out infinite; /* Бесконечная анимация с самого начала */
         }
 
         @keyframes waveLoop {
