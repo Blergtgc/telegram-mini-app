@@ -1,100 +1,50 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Loader</title>
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
+      margin: 0; padding: 0; height: 100%;
       background-color: black;
       font-family: Arial, sans-serif;
       overflow: hidden;
+      color: white;
     }
-
     body.transition {
       background: radial-gradient(circle at 50% 50%, #001f4d, #000033);
       background-size: 200% 200%;
       animation: waveLoop 6s ease-in-out infinite;
     }
-
     #texture {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       pointer-events: none;
       background-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
       opacity: 0.04;
       z-index: 1;
       display: none;
     }
-
-    #loading, #greeting, #nextMessage, #waitMessage, #enterButton, #credits {
+    .topText {
       position: absolute;
+      top: 5%;
       width: 100%;
       text-align: center;
-      z-index: 2;
-    }
-
-    #loading {
-      top: 40%;
-    }
-
-    #glowBarContainer {
-      width: 500px;
-      height: 10px;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 5px;
-      overflow: hidden;
-      margin: 0 auto;
-      box-shadow: 0 0 10px rgba(255,255,255,0.2);
-      position: relative;
-    }
-
-    #glowBar {
-      height: 100%;
-      width: 0%;
-      background: white;
-      box-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white, 0 0 40px white;
-      transition: width 0.05s linear;
-    }
-
-    #percent {
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 14px;
-      color: white;
-      text-shadow: 0 0 5px white;
-    }
-
-    .fadeText {
       font-size: 28px;
-      color: white;
       text-shadow: 0 0 10px white, 0 0 20px white;
       opacity: 0;
       transition: opacity 0.5s ease;
+      z-index: 2;
     }
-
-    #credits {
-      bottom: 20px;
-      left: 20px;
-      text-align: left;
-      font-size: 12px;
-      color: white;
-      text-shadow: 0 0 5px white, 0 0 10px white;
-    }
-
     #enterButton {
+      position: absolute;
       top: 50%;
-      transform: translateY(-50%);
+      width: 100%;
+      text-align: center;
       display: none;
+      z-index: 2;
     }
-
     #enterButton button {
       font-size: 20px;
       padding: 10px 20px;
@@ -106,12 +56,10 @@
       box-shadow: 0 0 20px white;
       transition: background 0.3s, transform 0.3s;
     }
-
     #enterButton button:hover {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: rgba(255,255,255,0.1);
       transform: scale(1.05);
     }
-
     @keyframes waveLoop {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -120,94 +68,52 @@
   </style>
 </head>
 <body>
+  <div id="greeting" class="topText">Привет</div>
+  <div id="nextMessage" class="topText">Ожидайте...</div>
+  <div id="waitMessage" class="topText">Сейчас у тебя откроется программа</div>
+  <div id="enterButton">
+    <button onclick="startTransition()">Начать</button>
+  </div>
   <div id="texture"></div>
 
-  <div id="loading">
-    <div id="glowBarContainer">
-      <div id="glowBar"></div>
-      <div id="percent">1%</div>
-    </div>
-  </div>
-
-  <div id="greeting" class="fadeText">Привет</div>
-  <div id="nextMessage" class="fadeText">Сейчас у тебя откроется программа</div>
-  <div id="waitMessage" class="fadeText">Ожидайте...</div>
-
-  <div id="enterButton">
-    <button onclick="startTransition()">Войти</button>
-  </div>
-
-  <div id="credits">by: @cmfucker</div>
-
   <script>
-    const percent = document.getElementById('percent');
-    const glowBar = document.getElementById('glowBar');
-    const loadingDiv = document.getElementById('loading');
     const greeting = document.getElementById('greeting');
     const nextMessage = document.getElementById('nextMessage');
     const waitMessage = document.getElementById('waitMessage');
     const enterButton = document.getElementById('enterButton');
-    const credits = document.getElementById('credits');
     const texture = document.getElementById('texture');
 
-    const duration = 3000 + Math.random() * 4000;
-    let start = null;
-
-    function updateProgress(timestamp) {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
-      const progressPercent = Math.min((elapsed / duration) * 100, 100);
-      percent.textContent = Math.round(progressPercent) + '%';
-      glowBar.style.width = progressPercent + '%';
-
-      if (progressPercent < 100) {
-        requestAnimationFrame(updateProgress);
-      } else {
-        showGreetingSequence();
-      }
+    function showMessage(elem, delay) {
+      return new Promise(res => {
+        elem.style.opacity = '1';
+        setTimeout(() => {
+          elem.style.opacity = '0';
+          setTimeout(res, 500);
+        }, delay);
+      });
     }
 
-    function showGreetingSequence() {
-      loadingDiv.style.display = 'none';
-      greeting.style.opacity = '1';
-
+    async function runSequence() {
+      await showMessage(greeting, 1500);
+      await showMessage(nextMessage, 1500);
+      waitMessage.style.opacity = '1';
+      document.body.classList.add('transition');
+      texture.style.display = 'block';
       setTimeout(() => {
-        greeting.style.opacity = '0';
-
+        waitMessage.style.opacity = '0';
         setTimeout(() => {
-          nextMessage.style.opacity = '1';
-
-          setTimeout(() => {
-            nextMessage.style.opacity = '0';
-
-            setTimeout(() => {
-              waitMessage.style.opacity = '1';
-
-              setTimeout(() => {
-                waitMessage.style.opacity = '0';
-
-                setTimeout(() => {
-                  enterButton.style.display = 'block';
-                }, 500);
-              }, 1500);
-            }, 500);
-          }, 3000);
+          enterButton.style.display = 'block';
         }, 500);
       }, 1500);
     }
 
     function startTransition() {
       enterButton.style.display = 'none';
-      credits.style.display = 'none';
-      document.body.classList.add('transition');
       texture.style.display = 'block';
-
-      setTimeout(() => {
-        window.location.href = 'register-login.html';
-      }, 2000);
+      window.location.href = 'register-login.html';
     }
 
-    requestAnimationFrame(updateProgress);
+    runSequence();
   </script>
 </body>
 </html>

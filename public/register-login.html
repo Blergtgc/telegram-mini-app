@@ -1,138 +1,147 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Вход / Регистрация</title>
+  <meta charset="UTF-8" />
+  <title>Регистрация / Авторизация</title>
   <style>
     body {
+      background: linear-gradient(135deg, #000428, #004e92);
       margin: 0;
       padding: 0;
-      height: 100vh;
-      background: radial-gradient(circle at center, #001f4d, #000033);
       font-family: Arial, sans-serif;
-      color: white;
+      height: 100vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-    }
-
-    .button, .input {
-      margin: 10px;
-      padding: 10px 20px;
-      font-size: 18px;
-      border: 2px solid white;
-      background: transparent;
       color: white;
-      cursor: pointer;
-      box-shadow: 0 0 10px white;
-      transition: 0.3s;
     }
-
-    .button:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: scale(1.05);
+    .container {
+      display: flex;
+      gap: 40px;
+      max-width: 800px;
+      width: 100%;
+      justify-content: center;
     }
-
-    .input {
-      border: 1px solid white;
-      background-color: rgba(255, 255, 255, 0.1);
-      width: 250px;
-      text-align: center;
+    .form-box {
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.3);
+      width: 350px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-
-    .hidden {
-      display: none;
-    }
-
-    #success {
-      color: limegreen;
+    .form-box input {
+      width: 80%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
       font-size: 16px;
-      margin-top: 10px;
-      text-shadow: 0 0 5px lime;
     }
-
-    #backBtn {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
+    .form-box button {
+      width: 80%;
+      padding: 10px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background-color: white;
+      color: #004e92;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .form-box button:hover {
+      background-color: #ccc;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+      text-align: center;
+      min-height: 20px;
     }
   </style>
 </head>
 <body>
-  <!-- Главное меню -->
-  <div id="mainMenu">
-    <button class="button" onclick="showRegister()">Регистрация</button>
-    <button class="button" onclick="showLogin()">Авторизация</button>
-  </div>
+  <div class="container">
+    <div class="form-box" id="registerBox">
+      <h2>Регистрация</h2>
+      <input type="text" id="regLogin" placeholder="Логин" autocomplete="off" />
+      <input type="password" id="regPassword" placeholder="Пароль" autocomplete="off" />
+      <button onclick="register()">Создать аккаунт</button>
+      <div class="error" id="regError"></div>
+    </div>
 
-  <!-- Регистрация -->
-  <div id="registerForm" class="hidden">
-    <input class="input" id="regLogin" type="text" placeholder="Логин">
-    <input class="input" id="regPass" type="password" placeholder="Пароль">
-    <button class="button" onclick="createAccount()">Создать аккаунт</button>
-    <div id="success" class="hidden">Вы успешно зарегистрировались</div>
-    <button class="button" id="backBtn" onclick="goBack()">Назад</button>
-  </div>
-
-  <!-- Авторизация -->
-  <div id="loginForm" class="hidden">
-    <input class="input" id="loginLogin" type="text" placeholder="Логин">
-    <input class="input" id="loginPass" type="password" placeholder="Пароль">
-    <button class="button" onclick="login()">Войти</button>
-    <button class="button" id="backBtn" onclick="goBack()">Назад</button>
+    <div class="form-box" id="loginBox">
+      <h2>Авторизация</h2>
+      <input type="text" id="loginLogin" placeholder="Логин" autocomplete="off" />
+      <input type="password" id="loginPassword" placeholder="Пароль" autocomplete="off" />
+      <button onclick="login()">Войти</button>
+      <div class="error" id="loginError"></div>
+    </div>
   </div>
 
   <script>
-    const mainMenu = document.getElementById("mainMenu");
-    const registerForm = document.getElementById("registerForm");
-    const loginForm = document.getElementById("loginForm");
-    const successMsg = document.getElementById("success");
+    function register() {
+      const login = document.getElementById('regLogin').value.trim();
+      const password = document.getElementById('regPassword').value.trim();
+      const error = document.getElementById('regError');
 
-    function showRegister() {
-      mainMenu.classList.add("hidden");
-      registerForm.classList.remove("hidden");
-    }
-
-    function showLogin() {
-      mainMenu.classList.add("hidden");
-      loginForm.classList.remove("hidden");
-    }
-
-    function goBack() {
-      registerForm.classList.add("hidden");
-      loginForm.classList.add("hidden");
-      successMsg.classList.add("hidden");
-      mainMenu.classList.remove("hidden");
-    }
-
-    function createAccount() {
-      const login = document.getElementById("regLogin").value.trim();
-      const pass = document.getElementById("regPass").value.trim();
-
-      if (login && pass) {
-        // Заглушка: здесь ты можешь подключить сохранение в localStorage или backend
-        console.log("Создан аккаунт:", login);
-        successMsg.classList.remove("hidden");
-      } else {
-        alert("Заполните все поля");
+      if (!login || !password) {
+        error.textContent = 'Заполните все поля';
+        return;
       }
+
+      fetch('pass.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `login=${encodeURIComponent(login)}&password=${encodeURIComponent(password)}`
+      })
+      .then(response => response.text())
+      .then(text => {
+        if (text === 'OK') {
+          alert('Регистрация прошла успешно');
+          error.textContent = '';
+          // Очистить поля
+          document.getElementById('regLogin').value = '';
+          document.getElementById('regPassword').value = '';
+        } else {
+          error.textContent = text;
+        }
+      })
+      .catch(() => {
+        error.textContent = 'Ошибка отправки данных';
+      });
     }
 
     function login() {
-      const login = document.getElementById("loginLogin").value.trim();
-      const pass = document.getElementById("loginPass").value.trim();
+      const login = document.getElementById('loginLogin').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+      const error = document.getElementById('loginError');
 
-      if (login && pass) {
-        // Заглушка: здесь ты можешь подключить проверку данных
-        console.log("Авторизация:", login);
-        document.body.innerHTML = ""; // Убираем всё, остаётся только фон
-        document.body.style.background = "radial-gradient(circle at center, #001f4d, #000033)";
-      } else {
-        alert("Введите логин и пароль");
+      if (!login || !password) {
+        error.textContent = 'Заполните все поля';
+        return;
       }
+
+      fetch('pass.html')
+        .then(resp => resp.text())
+        .then(data => {
+          // Проверяем есть ли такой логин и пароль в pass.html
+          const regex = new RegExp(`<li>Логин: ${login} \\| Пароль: ${password}</li>`, 'i');
+          if (regex.test(data)) {
+            alert('Успешный вход');
+            error.textContent = '';
+            // Можно добавить переход на другую страницу
+          } else {
+            error.textContent = 'Логин или пароль неверный';
+          }
+        })
+        .catch(() => {
+          error.textContent = 'Ошибка при проверке данных';
+        });
     }
   </script>
 </body>
 </html>
-

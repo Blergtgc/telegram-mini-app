@@ -1,25 +1,38 @@
 <?php
-// save.php
+// pass.php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $login = trim($_POST['login'] ?? '');
+    $password = trim($_POST['password'] ?? '');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login']) && isset($_POST['password'])) {
-    $login = htmlspecialchars($_POST['login']);
-    $password = htmlspecialchars($_POST['password']);
+    if (!$login || !$password) {
+        echo "Заполните все поля";
+        exit;
+    }
 
-    // Форматируем запись (можно заменить на JSON или CSV)
-    $entry = "Login: $login | Password: $password\n";
-
-    // Файл для хранения данных
     $file = 'pass.html';
 
-    // Пытаемся дописать в файл
-    if (file_put_contents($file, $entry, FILE_APPEND | LOCK_EX)) {
-        echo "OK";
-    } else {
-        http_response_code(500);
-        echo "Ошибка записи данных";
+    // Создаем файл, если не существует, с базовой структурой
+    if (!file_exists($file)) {
+        file_put_contents($file, "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Users</title></head><body><ul></ul></body></html>");
     }
+
+    $content = file_get_contents($file);
+
+    // Проверяем, есть ли уже такой логин
+    if (strpos($content, "Логин: $login |") !== false) {
+        echo "Пользователь с таким логином уже зарегистрирован";
+        exit;
+    }
+
+    // Вставляем новую запись перед </ul>
+    $newEntry = "<li>Логин: $login | Пароль: $password</li>\n";
+
+    $content = str_replace("</ul>", $newEntry . "</ul>", $content);
+
+    file_put_contents($file, $content);
+
+    echo "OK";
 } else {
-    http_response_code(400);
-    echo "Неверный запрос";
+    echo "Неверный метод запроса";
 }
 ?>
