@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Вход / Регистрация</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: radial-gradient(circle at center, #001f4d, #000033);
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .button, .input {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: 2px solid white;
+      background: transparent;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 10px white;
+      transition: 0.3s;
+    }
+
+    .button:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.05);
+    }
+
+    .input {
+      border: 1px solid white;
+      background-color: rgba(255, 255, 255, 0.1);
+      width: 250px;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #success {
+      color: limegreen;
+      font-size: 16px;
+      margin-top: 10px;
+      text-shadow: 0 0 5px lime;
+    }
+
+    #backBtn {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Главное меню -->
+  <div id="mainMenu">
+    <button class="button" onclick="showRegister()">Регистрация</button>
+    <button class="button" onclick="showLogin()">Авторизация</button>
+  </div>
+
+  <!-- Регистрация -->
+  <div id="registerForm" class="hidden">
+    <input class="input" id="regLogin" type="text" placeholder="Логин">
+    <input class="input" id="regPass" type="password" placeholder="Пароль">
+    <button class="button" onclick="createAccount()">Создать аккаунт</button>
+    <div id="success" class="hidden">Вы успешно зарегистрировались</div>
+    <button class="button" id="backBtn" onclick="goBack()">Назад</button>
+  </div>
+
+  <!-- Авторизация -->
+  <div id="loginForm" class="hidden">
+    <input class="input" id="loginLogin" type="text" placeholder="Логин">
+    <input class="input" id="loginPass" type="password" placeholder="Пароль">
+    <button class="button" onclick="login()">Войти</button>
+    <button class="button" id="backBtn" onclick="goBack()">Назад</button>
+  </div>
+
+  <script>
+    const mainMenu = document.getElementById("mainMenu");
+    const registerForm = document.getElementById("registerForm");
+    const loginForm = document.getElementById("loginForm");
+    const successMsg = document.getElementById("success");
+
+    function showRegister() {
+      mainMenu.classList.add("hidden");
+      registerForm.classList.remove("hidden");
+    }
+
+    function showLogin() {
+      mainMenu.classList.add("hidden");
+      loginForm.classList.remove("hidden");
+    }
+
+    function goBack() {
+      registerForm.classList.add("hidden");
+      loginForm.classList.add("hidden");
+      successMsg.classList.add("hidden");
+      mainMenu.classList.remove("hidden");
+    }
+
+    function createAccount() {
+      const login = document.getElementById("regLogin").value.trim();
+      const pass = document.getElementById("regPass").value.trim();
+
+      if (login && pass) {
+        // Заглушка: здесь ты можешь подключить сохранение в localStorage или backend
+        console.log("Создан аккаунт:", login);
+        successMsg.classList.remove("hidden");
+      } else {
+        alert("Заполните все поля");
+      }
+    }
+
+    function login() {
+      const login = document.getElementById("loginLogin").value.trim();
+      const pass = document.getElementById("loginPass").value.trim();
+
+      if (login && pass) {
+        // Заглушка: здесь ты можешь подключить проверку данных
+        console.log("Авторизация:", login);
+        document.body.innerHTML = ""; // Убираем всё, остаётся только фон
+        document.body.style.background = "radial-gradient(circle at center, #001f4d, #000033)";
+      } else {
+        alert("Введите логин и пароль");
+      }
+    }
+  </script>
+</body>
+</html>
